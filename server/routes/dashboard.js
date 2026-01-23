@@ -1,0 +1,13 @@
+const express = require('express');
+const router = express.Router();
+const dashboardController = require('../controllers/dashboardController');
+const { protect, adminOnly } = require('../middleware/authMiddleware');
+
+// Map the endpoints to the controller functions
+router.get('/summary', protect, adminOnly, dashboardController.getDashboardSummary); // GET /api/dashboard/summary
+router.get('/financials', protect, adminOnly, dashboardController.getFinancialData); // GET /api/dashboard/financials
+router.get('/service-charges-details', protect, adminOnly, dashboardController.getServiceChargeDetails); // GET /api/dashboard/service-charges-details
+router.get('/parts-revenue-details', protect, adminOnly, dashboardController.getPartsRevenueDetails); // GET /api/dashboard/parts-revenue-details
+
+// IMPORTANT: You must export the router
+module.exports = router;

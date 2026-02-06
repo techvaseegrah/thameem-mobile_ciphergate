@@ -194,17 +194,17 @@ const Inventory = () => {
         cost_price: Number(formData.cost_price) || 0,
         selling_price: Number(formData.selling_price) || 0,
         location: formData.location || '',
-        supplier: formData.supplier || '',
         color: formData.color || ''
       };
       
-      // If supplier is provided, validate it's a valid ObjectId
-      if (submitData.supplier) {
-        const isValidSupplierId = /^[0-9a-fA-F]{24}$/.test(submitData.supplier);
+      // Only include supplier if it has a valid value
+      if (formData.supplier && formData.supplier.trim()) {
+        const isValidSupplierId = /^[0-9a-fA-F]{24}$/.test(formData.supplier);
         if (!isValidSupplierId) {
           setError('Supplier ID format is invalid. Please select a valid supplier.');
           return;
         }
+        submitData.supplier = formData.supplier;
       }
       
       if (isEditing) {
@@ -217,7 +217,7 @@ const Inventory = () => {
         setSuccess('Part added successfully');
       }
       setShowModal(false);
-      setFormData({
+      setFormData(prev => ({
         name: '',
         sku: '',
         category: categories.length > 0 ? categories[0]._id : '',
@@ -226,9 +226,9 @@ const Inventory = () => {
         cost_price: 0,
         selling_price: 0,
         location: '',
-        supplier: '',
+        supplier: '', // Keep as empty string initially
         color: ''
-      });
+      }));
       setIsEditing(false);
       setEditingPartId(null);
       fetchParts(); // Refresh the list
@@ -241,6 +241,8 @@ const Inventory = () => {
         // Handle specific error messages
         if (errorMessage.includes('SKU already exists')) {
           setError('This SKU already exists. Please enter a unique SKU for the product.');
+        } else if (errorMessage.includes('Cast to ObjectId failed') && errorMessage.includes('supplier')) {
+          setError('Invalid supplier selection. Please select a valid supplier or leave it blank.');
         } else {
           setError('Server Error: ' + errorMessage);
         }
@@ -265,7 +267,7 @@ const Inventory = () => {
     setShowModal(false);
     setIsEditing(false);
     setEditingPartId(null);
-    setFormData({
+    setFormData(prev => ({
       name: '',
       sku: '',
       category: categories.length > 0 ? categories[0]._id : '',
@@ -274,9 +276,9 @@ const Inventory = () => {
       cost_price: 0,
       selling_price: 0,
       location: '',
-      supplier: '',
+      supplier: '', // Keep as empty string initially
       color: ''
-    });
+    }));
     setError('');
     setSuccess('');
   };
@@ -287,7 +289,7 @@ const Inventory = () => {
   };
 
   const handleEdit = (part) => {
-    setFormData({
+    setFormData(prev => ({
       name: part.name,
       sku: part.sku,
       category: part.category?._id || (categories.length > 0 ? categories[0]._id : ''),
@@ -296,9 +298,9 @@ const Inventory = () => {
       cost_price: part.cost_price,
       selling_price: part.selling_price,
       location: part.location || '',
-      supplier: part.supplier?._id || '',
+      supplier: part.supplier?._id || '', // Use empty string if no supplier
       color: part.color || ''
-    });
+    }));
     setIsEditing(true);
     setEditingPartId(part._id);
     setShowModal(true);

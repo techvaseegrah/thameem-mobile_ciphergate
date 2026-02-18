@@ -12,7 +12,7 @@ const WorkerSchema = new Schema({
   rfid: { type: String, unique: true }, // RFID field (optional)
   salary: { type: Number }, // Salary field (optional)
   batch: { type: Schema.Types.ObjectId, ref: 'Batch' }, // Batch field (optional)
-  attendanceRecords: [{ 
+  attendanceRecords: [{
     date: { type: Date, default: Date.now },
     checkIn: { type: Date },
     checkOut: { type: Date },
@@ -39,13 +39,13 @@ const CategorySchema = new Schema({
 const PartSchema = new Schema({
   name: { type: String, required: true },
   sku: { type: String, unique: true, required: true },
-  category: { 
-    type: Schema.Types.ObjectId, 
+  category: {
+    type: Schema.Types.ObjectId,
     ref: 'Category',
     required: true
   },
-  supplier: { 
-    type: Schema.Types.ObjectId, 
+  supplier: {
+    type: Schema.Types.ObjectId,
     ref: 'Supplier'
   },
   compatible_models: [{ type: String }],
@@ -74,32 +74,32 @@ const JobSchema = new Schema({
   serial_number: String,
   device_condition: String,
   reported_issue: String,
-  repair_type: { 
-    type: String, 
-    enum: ['hardware', 'software', 'diagnostics'], 
-    default: 'hardware' 
+  repair_type: {
+    type: String,
+    enum: ['hardware', 'software', 'diagnostics'],
+    default: 'hardware'
   },
-  urgency_level: { 
-    type: String, 
-    enum: ['normal', 'express', 'urgent'], 
-    default: 'normal' 
+  urgency_level: {
+    type: String,
+    enum: ['normal', 'express', 'urgent'],
+    default: 'normal'
   },
   estimated_delivery_date: Date,
   service_charges: Number,
   parts_cost: Number,
   advance_payment: Number,
-  payment_method: { 
-    type: String, 
-    enum: ['cash', 'card', 'upi', 'bank_transfer'], 
-    default: 'cash' 
+  payment_method: {
+    type: String,
+    enum: ['cash', 'card', 'upi', 'bank_transfer'],
+    default: 'cash'
   },
   total_amount: Number,
   discount_amount: { type: Number, default: 0 },
   job_card_number: String,
-  status: { 
-    type: String, 
-    enum: ['Intake', 'Pending Approval', 'In Progress', 'Done', 'Picked Up', 'Cancelled'], 
-    default: 'Intake' 
+  status: {
+    type: String,
+    enum: ['Intake', 'Pending Approval', 'In Progress', 'Done', 'Picked Up', 'Cancelled'],
+    default: 'Intake'
   },
   cancellation_reason: String,
   cancelled_at: Date,
@@ -146,7 +146,8 @@ const BatchSchema = new Schema({
 
 // Create a simple settings schema to store the last bill number
 const SettingsSchema = new Schema({
-  lastBillNumber: { type: Number, default: 0 }
+  lastBillNumber: { type: Number, default: 0 },
+  lastSaleNumber: { type: Number, default: 0 }
 });
 
 // Exports

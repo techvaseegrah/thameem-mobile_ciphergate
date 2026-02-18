@@ -24,42 +24,43 @@ import Salary from './pages/Salary';
 import CancelledJobs from './pages/CancelledJobs';
 import ManageEntries from './pages/ManageEntries';
 import CustomerDirectory from './pages/CustomerDirectory';
+import ProductSales from './pages/ProductSales';
 
 import EmployeeSidebar from './components/EmployeeSidebar';
 
 // Component to conditionally render Sidebar
 const ConditionalSidebar = ({ location, isSidebarOpen, toggleSidebar }) => {
   const hideSidebarRoutes = ['/', '/admin/login', '/employee/login'];
-  
+
   // Check if current route is in the list of routes where sidebar should be hidden
   const shouldHideSidebar = hideSidebarRoutes.includes(location.pathname);
-  
+
   // Also check if we're on an employee dashboard route
   const isEmployeeDashboard = location.pathname.startsWith('/employee/') && location.pathname.endsWith('/dashboard');
-  
+
   // Also check if we're on an employee attendance route
   const isEmployeeAttendance = location.pathname.startsWith('/employee/') && location.pathname.endsWith('/attendance');
-  
+
   // Also check if we're on an employee jobs route
   const isEmployeeJobs = location.pathname.startsWith('/employee/') && location.pathname.endsWith('/jobs');
-  
+
   // Show sidebar only if not on login/home pages and user is authenticated
   // For employees, show sidebar on attendance page but not on dashboard
   const showSidebar = !shouldHideSidebar && !(isEmployeeDashboard && !isEmployeeAttendance) && (localStorage.getItem('admin') || (localStorage.getItem('employee') && (isEmployeeAttendance || location.pathname.startsWith('/employee/') && location.pathname.endsWith('/dashboard'))));
-  
+
   // Simplified logic: show sidebar for authenticated users except on specific hidden routes
   const isAdmin = localStorage.getItem('admin');
   const isEmployee = localStorage.getItem('employee');
   const showSidebarSimple = !shouldHideSidebar && (isAdmin || (isEmployee && (isEmployeeAttendance || isEmployeeDashboard || isEmployeeJobs)));
-  
+
   // Handle employee sidebar
   if (isEmployee && (isEmployeeAttendance || isEmployeeDashboard || isEmployeeJobs)) {
     // Parse employee data from localStorage
     try {
       const employee = JSON.parse(localStorage.getItem('employee'));
       return (
-        <EmployeeSidebar 
-          worker={employee} 
+        <EmployeeSidebar
+          worker={employee}
           onLogout={() => {
             localStorage.removeItem('employee');
             window.location.href = '/employee/login';
@@ -72,7 +73,7 @@ const ConditionalSidebar = ({ location, isSidebarOpen, toggleSidebar }) => {
       return null;
     }
   }
-  
+
   return showSidebarSimple ? <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} /> : null;
 };
 
@@ -80,22 +81,22 @@ const ConditionalSidebar = ({ location, isSidebarOpen, toggleSidebar }) => {
 function AppContent() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const location = useLocation();
-  
+
   // Close sidebar when route changes on mobile
   useEffect(() => {
     if (window.innerWidth < 768) {
       setIsSidebarOpen(false);
     }
   }, [location]);
-  
+
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
-  
+
   return (
     <div className="flex min-h-screen bg-gray-100">
       <ConditionalSidebar location={location} isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
-      
+
       <div className={`flex-1 transition-all duration-300 ${location.pathname === '/' || location.pathname === '/admin/login' || location.pathname === '/employee/login' || location.pathname.startsWith('/employee/') ? '' : 'lg:ml-64'}`}>
         <Routes>
           <Route path="/" element={<Home />} />
@@ -114,6 +115,7 @@ function AppContent() {
           <Route path="/settings" element={<Settings />} />
           <Route path="/suppliers" element={<Suppliers />} />
           <Route path="/purchases" element={<Purchases />} />
+          <Route path="/product-sales" element={<ProductSales />} />
           <Route path="/cancelled-jobs" element={<CancelledJobs />} />
           <Route path="/customer-directory" element={<CustomerDirectory />} />
           <Route path="/manage-entries" element={<ManageEntries />} />

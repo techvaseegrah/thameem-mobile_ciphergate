@@ -20,6 +20,7 @@ const holidayRoutes = require('./routes/holidays');
 const whatsappRoutes = require('./routes/whatsapp');
 const commonEntryRoutes = require('./routes/commonEntries');
 const customerExportRoutes = require('./routes/customerExports');
+const salesRoutes = require('./routes/sales');
 
 // Import Admin model
 const Admin = require('./models/Admin');
@@ -43,12 +44,12 @@ mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
-.then(() => {
-  console.log('MongoDB Connected');
-  // Initialize default admin user
-  initializeDefaultAdmin();
-})
-.catch(err => console.log(err));
+  .then(() => {
+    console.log('MongoDB Connected');
+    // Initialize default admin user
+    initializeDefaultAdmin();
+  })
+  .catch(err => console.log(err));
 
 // Function to initialize default admin user
 async function initializeDefaultAdmin() {
@@ -57,31 +58,31 @@ async function initializeDefaultAdmin() {
     const defaultUsername = process.env.DEFAULT_ADMIN_USERNAME;
     const defaultPassword = process.env.DEFAULT_ADMIN_PASSWORD;
     const defaultEmail = process.env.DEFAULT_ADMIN_EMAIL;
-    
+
     if (!defaultUsername || !defaultPassword || !defaultEmail) {
       console.log('Default admin credentials not set in environment variables');
       return;
     }
-    
+
     // Check if admin with default username already exists
     const existingAdmin = await Admin.findOne({ username: defaultUsername });
-    
+
     if (existingAdmin) {
       console.log(`Admin user '${defaultUsername}' already exists`);
       return;
     }
-    
+
     // Hash the default password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(defaultPassword, salt);
-    
+
     // Create the default admin user
     const defaultAdmin = new Admin({
       username: defaultUsername,
       email: defaultEmail,
       password: hashedPassword
     });
-    
+
     await defaultAdmin.save();
     console.log(`Default admin user '${defaultUsername}' created successfully`);
   } catch (error) {
@@ -107,6 +108,7 @@ app.use('/api/holidays', holidayRoutes);
 app.use('/api/whatsapp', whatsappRoutes);
 app.use('/api/common-entries', commonEntryRoutes);
 app.use('/api/customer-exports', customerExportRoutes);
+app.use('/api/sales', salesRoutes);
 
 // Root route
 app.get('/', (req, res) => {

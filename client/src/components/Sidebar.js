@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 const Sidebar = ({ isOpen, toggleSidebar }) => {
   const navigate = useNavigate();
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
-  
+
   const menuItems = [
     { name: 'Dashboard', path: '/dashboard', icon: '📊' },
     { name: 'New Intake', path: '/jobs/new', icon: '➕' },
@@ -14,6 +14,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
     { name: 'Inventory', path: '/inventory', icon: '📦' },
     { name: 'Suppliers', path: '/suppliers', icon: '🚚' },
     { name: 'Purchases', path: '/purchases', icon: '🛒' },
+    { name: 'Product Sales', path: '/product-sales', icon: '💳' },
     { name: 'Workers', path: '/workers', icon: '👤' },
     { name: 'Attendance', path: '/attendance', icon: '📋' },
     { name: 'Holidays', path: '/holidays', icon: '🎉' },
@@ -59,14 +60,14 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path>
         </svg>
       </button>
-      
+
       {/* Sidebar - hidden by default on mobile */}
-      <div 
-        className={`bg-gradient-to-b from-slate-900 to-indigo-900 text-white w-64 h-screen md:h-screen fixed flex flex-col transform transition-transform duration-300 ease-in-out z-40 ${isOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 lg:fixed lg:z-auto lg:w-64 lg:inset-y-0`} style={{minHeight: '100vh'}}>
-      
+      <div
+        className={`bg-gradient-to-b from-slate-900 to-indigo-900 text-white w-64 h-screen md:h-screen fixed flex flex-col transform transition-transform duration-300 ease-in-out z-40 ${isOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 lg:fixed lg:z-auto lg:w-64 lg:inset-y-0`} style={{ minHeight: '100vh' }}>
+
         <div className="p-5 text-xl font-bold border-b border-gray-700 flex flex-col items-center">
           <div className="text-center text-white">Thameem<br /><span className="text-blue-400">Mobiles</span></div>
-          <button 
+          <button
             className="lg:hidden text-white p-1 rounded-md hover:bg-slate-700 mt-2"
             onClick={toggleSidebar}
           >
@@ -80,8 +81,8 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
             <ul className="space-y-2 p-4">
               {menuItems.map((item) => (
                 <li key={item.name}>
-                  <Link 
-                    to={item.path} 
+                  <Link
+                    to={item.path}
                     className="flex items-center p-3 rounded-lg transition-colors duration-200 hover:bg-slate-800 hover:text-blue-300"
                     onClick={() => {
                       if (window.innerWidth < 768) {
@@ -110,7 +111,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 
       {/* Overlay for mobile - only appears when sidebar is open */}
       {isOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden lg:hidden"
           onClick={handleClickOutside}
         ></div>
@@ -131,7 +132,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                   Are you sure you want to logout?
                 </p>
               </div>
-              
+
               <div className="flex justify-end space-x-3">
                 <button
                   onClick={cancelLogout}
